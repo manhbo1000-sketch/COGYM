@@ -19,9 +19,9 @@ error-404.jsp
 <body>
     <div class="box">
         <h1>404</h1>
-        <h2>Không tìm thấy khách hàng!</h2>
-        <p>Xin lỗi, dữ liệu khách hàng bạn yêu cầu không tồn tại hoặc đã bị xóa khỏi hệ thống.</p>
-        <a href="${pageContext.request.contextPath}/customers" class="btn">
+        <h2>Không tìm thấy sản phẩm!</h2>
+        <p>Xin lỗi, sản phẩm bạn yêu cầu không tồn tại hoặc đã bị xóa khỏi hệ thống.</p>
+        <a href="${pageContext.request.contextPath}/products" class="btn">
             ← Về danh sách chính
         </a>
     </div>

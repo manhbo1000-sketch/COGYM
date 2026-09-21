@@ -6,7 +6,7 @@ pom.xml
                              http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.codegym</groupId>
-    <artifactId>customer-management</artifactId>
+    <artifactId>product-management</artifactId>
     <packaging>war</packaging>
     <version>1.0-SNAPSHOT</version>
 
@@ -42,7 +42,7 @@ pom.xml
     </dependencies>
 
     <build>
-        <finalName>customer-management</finalName>
+        <finalName>product-management</finalName>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
