@@ -1,0 +1,125 @@
+UserServlet.java
+package com.codegym.controller;
+
+import com.codegym.dao.UserDAO;
+import com.codegym.model.User;
+
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+
+import java.io.IOException;
+import java.sql.SQLException;
+import java.util.List;
+
+@WebServlet(name = "UserServlet", urlPatterns = {"/users"})
+public class UserServlet extends HttpServlet {
+
+    private UserDAO userDAO;
+
+    @Override
+    public void init() { userDAO = new UserDAO(); }
+
+    @Override
+    protected void doGet(HttpServletRequest request,
+                         HttpServletResponse response)
+            throws ServletException, IOException {
+
+        request.setCharacterEncoding("UTF-8");
+        String action = request.getParameter("action");
+        if (action == null) action = "list";
+
+        try {
+            switch (action) {
+                case "new":    showNewForm(request, response);  break;
+                case "edit":   showEditForm(request, response); break;
+                case "delete": deleteUser(request, response);   break;
+                default:       listUsers(request, response);    break;
+            }
+        } catch (SQLException e) { throw new ServletException(e); }
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest request,
+                          HttpServletResponse response)
+            throws ServletException, IOException {
+
+        request.setCharacterEncoding("UTF-8");
+        String action = request.getParameter("action");
+        if (action == null) action = "list";
+
+        try {
+            switch (action) {
+                case "insert": insertUser(request, response); break;
+                case "update": updateUser(request, response); break;
+                default:       listUsers(request, response);  break;
+            }
+        } catch (SQLException e) { throw new ServletException(e); }
+    }
+
+    // ⭐ LIST + TÌM KIẾM + SẮP XẾP
+    private void listUsers(HttpServletRequest request,
+                           HttpServletResponse response)
+            throws SQLException, ServletException, IOException {
+
+        String country = request.getParameter("country");
+        String sortBy  = request.getParameter("sortBy");
+
+        List<User> users = userDAO.selectUsersWithFilter(country, sortBy);
+
+        request.setAttribute("users", users);
+        request.setAttribute("searchCountry", country);
+        request.setAttribute("sortBy", sortBy);
+
+        request.getRequestDispatcher("/user/list.jsp")
+               .forward(request, response);
+    }
+
+    private void showNewForm(HttpServletRequest request,
+                             HttpServletResponse response)
+            throws ServletException, IOException {
+        request.getRequestDispatcher("/user/add.jsp")
+               .forward(request, response);
+    }
+
+    private void showEditForm(HttpServletRequest request,
+                              HttpServletResponse response)
+            throws SQLException, ServletException, IOException {
+        int id = Integer.parseInt(request.getParameter("id"));
+        User existing = userDAO.selectUser(id);
+        request.setAttribute("user", existing);
+        request.getRequestDispatcher("/user/edit.jsp")
+               .forward(request, response);
+    }
+
+    private void insertUser(HttpServletRequest request,
+                            HttpServletResponse response)
+            throws SQLException, IOException {
+        String name    = request.getParameter("name");
+        String email   = request.getParameter("email");
+        String country = request.getParameter("country");
+        userDAO.insertUser(new User(name, email, country));
+        response.sendRedirect("users?action=list");
+    }
+
+    private void updateUser(HttpServletRequest request,
+                            HttpServletResponse response)
+            throws SQLException, IOException {
+        int id         = Integer.parseInt(request.getParameter("id"));
+        String name    = request.getParameter("name");
+        String email   = request.getParameter("email");
+        String country = request.getParameter("country");
+        userDAO.updateUser(new User(id, name, email, country));
+        response.sendRedirect("users?action=list");
+    }
+
+    private void deleteUser(HttpServletRequest request,
+                            HttpServletResponse response)
+            throws SQLException, IOException {
+        int id = Integer.parseInt(request.getParameter("id"));
+        userDAO.deleteUser(id);
+        response.sendRedirect("users?action=list");
+    }
+}

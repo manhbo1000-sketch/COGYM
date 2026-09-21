@@ -1,0 +1,25 @@
+user_management.sql
+CREATE DATABASE IF NOT EXISTS user_management
+    CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+USE user_management;
+
+DROP TABLE IF EXISTS users;
+
+CREATE TABLE users (
+    id      INT AUTO_INCREMENT PRIMARY KEY,
+    name    VARCHAR(120) NOT NULL,
+    email   VARCHAR(120) NOT NULL UNIQUE,
+    country VARCHAR(80)  NOT NULL
+);
+
+INSERT INTO users (name, email, country) VALUES
+('Nguyen Van An',   'an.nguyen@example.com',   'Vietnam'),
+('Tran Thi Binh',   'binh.tran@example.com',   'Vietnam'),
+('John Smith',      'john.smith@example.com',  'USA'),
+('Alice Johnson',   'alice.j@example.com',     'USA'),
+('Yuki Tanaka',     'yuki.t@example.com',      'Japan'),
+('Kim Min Jae',     'minjae@example.com',      'Korea'),
+('Le Hoang Cuong',  'cuong.le@example.com',    'Vietnam'),
+('Zhang Wei',       'zhang.wei@example.com',   'China'),
+('Emma Wilson',     'emma.w@example.com',      'UK'),
+('Pham Thi Dung',   'dung.pham@example.com',   'Vietnam');
